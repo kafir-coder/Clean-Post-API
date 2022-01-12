@@ -11,4 +11,13 @@ describe('list post controller ', () => {
     const result = await sut.handle();
     expect(result).toEqual(badRequest(new MissingParamError('request')));
   });
+
+  it('list-post controller should return MissingParamError if request doesnt has a query object', async () => {
+    const sut = makeSut();
+
+    const request = {};
+
+    const result = await sut.handle(request);
+    expect(result).toEqual(badRequest(new MissingParamError('request.query')));
+  });
 });
