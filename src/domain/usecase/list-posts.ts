@@ -1,4 +1,4 @@
-import {Post} from '@data/models/post';
+import {Post} from '@domain/models/post';
 
 export interface ListPost {
     listPost(paginate: PaginationParams): Promise<Post[]>
