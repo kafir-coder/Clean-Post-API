@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line max-len
-import {MissingParamError} from '../errors/';
+import {EmptyParamError, MissingParamError} from '../errors/';
 import {badRequest} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {HttpResponse} from '../protocols/http';
@@ -14,6 +14,10 @@ export class ListPost implements Controller {
 
     if (Object.entries(request).length === 0) {
       return badRequest(new MissingParamError('request.query'));
+    }
+
+    if (Object.entries(request['query']).length === 0) {
+      return badRequest(new EmptyParamError('request.query'));
     }
     return {
       statusCode: 200,
