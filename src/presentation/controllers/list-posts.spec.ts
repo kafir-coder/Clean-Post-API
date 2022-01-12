@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import {MissingParamError} from '../errors/';
+import {EmptyParamError, MissingParamError} from '../errors/';
 import {badRequest} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {ListPost} from './list-posts';
@@ -19,5 +19,15 @@ describe('list post controller ', () => {
 
     const result = await sut.handle(request);
     expect(result).toEqual(badRequest(new MissingParamError('request.query')));
+  });
+
+  // eslint-disable-next-line max-len
+  it('list-post controller should return EmptyParamError if request.query is empty', async () => {
+    const sut = makeSut();
+    const request = {
+      query: {},
+    };
+    const result = await sut.handle(request);
+    expect(result).toEqual(badRequest(new EmptyParamError('request.query')));
   });
 });
