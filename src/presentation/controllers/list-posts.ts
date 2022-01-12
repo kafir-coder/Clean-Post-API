@@ -11,6 +11,10 @@ export class ListPost implements Controller {
     if (!request) {
       return badRequest(new MissingParamError('request'));
     }
+
+    if (Object.entries(request).length === 0) {
+      return badRequest(new MissingParamError('request.query'));
+    }
     return {
       statusCode: 200,
       body: 'asdf',
