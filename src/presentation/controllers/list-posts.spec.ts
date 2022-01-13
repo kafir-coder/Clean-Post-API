@@ -74,4 +74,20 @@ describe('list post controller ', () => {
 
     expect(listPosts_spy).toHaveBeenCalledTimes(1);
   });
+
+  it('list-post controller should call ListPosts.listPosts with proper arguments', async () => {
+    const {sut, listPosts} = makeSut();
+
+    // eslint-disable-next-line camelcase
+    const listPosts_spy = jest.spyOn(listPosts, 'listPost');
+    const request: QueryParameter = {
+      query: {
+        limit: 5,
+        page: 1,
+      },
+    };
+    await sut.handle(request);
+
+    expect(listPosts_spy).toHaveBeenCalledWith(request.query);
+  });
 });
