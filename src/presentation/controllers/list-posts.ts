@@ -23,7 +23,8 @@ export class ListPost implements Controller {
     if (Object.entries(request['query']).length === 0) {
       return badRequest(new EmptyParamError('request.query'));
     }
-    this.listPost.listPost(request.query);
+    // @ts-ignore
+    this.listPost.listPost();
     return {
       statusCode: 200,
       body: 'asdf',

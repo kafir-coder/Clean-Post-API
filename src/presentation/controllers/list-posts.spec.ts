@@ -5,7 +5,7 @@ import {badRequest} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {ListPostUsecase, PaginationParams} from '@domain/usecase/list-posts';
 import {Post} from '@domain/models/post';
-import {ListPost, QueryParameter} from './list-posts';
+import {ListPost} from './list-posts';
 
 
 class MockListPost implements ListPostUsecase {
@@ -59,19 +59,8 @@ describe('list post controller ', () => {
     expect(result).toEqual(badRequest(new EmptyParamError('request.query')));
   });
 
-  it('list-post controller should call ListPosts.listPosts', async () => {
-    const {sut, listPosts} = makeSut();
+  it('list-post controller should receive a ListPost.list injection', async () => {
 
-    // eslint-disable-next-line camelcase
-    const listPosts_spy = jest.spyOn(listPosts, 'listPost');
-    const request: QueryParameter = {
-      query: {
-        limit: 5,
-        page: 1,
-      },
-    };
-    await sut.handle(request);
 
-    expect(listPosts_spy).toHaveBeenCalledTimes(1);
   });
 });
