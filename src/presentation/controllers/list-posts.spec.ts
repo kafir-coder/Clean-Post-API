@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 import {EmptyParamError, MissingParamError, ServerError} from '../errors/';
-import {badRequest, serverError} from '../helpers/http-helpers';
+import {badRequest, ok, serverError} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {ListPostUsecase, PaginationParams} from '@domain/usecase/list-posts';
 import {Post} from '@domain/models/post';
@@ -109,5 +109,29 @@ describe('list post controller ', () => {
     const result = await sut.handle(request);
 
     expect(result).toEqual(serverError(new ServerError('Internal Server Error')));
+  });
+
+  it('list-post controller return Ok if Listposts.listPost returns a list of posts', async () => {
+    const {sut, listPosts} = makeSut();
+
+    // eslint-disable-next-line camelcase
+    const list_of_posts: Post[] = [
+      {
+        name: 'amigaOs, how to master',
+        content: 'some fucking html',
+        images: ['smile.jpeg'],
+        tags: ['satanic'],
+      },
+    ];
+    // eslint-disable-next-line camelcase
+    jest.spyOn(listPosts, 'listPost').mockReturnValueOnce(Promise.resolve(list_of_posts));
+    const request: QueryParameter = {
+      query: {
+        limit: 5,
+        page: 1,
+      },
+    };
+    const result = await sut.handle(request);
+    expect(result).toEqual(ok(list_of_posts));
   });
 });
