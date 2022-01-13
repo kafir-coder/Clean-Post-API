@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line max-len
+import {ListPostUsecase} from '@domain/usecase/list-posts';
 import {EmptyParamError, MissingParamError} from '../errors/';
 import {badRequest} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
@@ -7,6 +8,9 @@ import {HttpResponse} from '../protocols/http';
 
 
 export class ListPost implements Controller {
+  constructor(
+    private readonly listPost: ListPostUsecase,
+  ) {}
   async handle(request: QueryParameter): Promise<HttpResponse> {
     if (!request) {
       return badRequest(new MissingParamError('request'));
