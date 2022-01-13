@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-import {EmptyParamError, MissingParamError} from '../errors/';
-import {badRequest} from '../helpers/http-helpers';
+import {EmptyParamError, MissingParamError, ServerError} from '../errors/';
+import {badRequest, serverError} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {ListPostUsecase, PaginationParams} from '@domain/usecase/list-posts';
 import {Post} from '@domain/models/post';
@@ -20,6 +20,10 @@ class MockListPost implements ListPostUsecase {
     ];
   }
 }
+
+const throwErr = () => {
+  throw Error('some error');
+};
 type sutTypes = {
   sut: Controller<any>
   listPosts: ListPostUsecase
@@ -89,5 +93,21 @@ describe('list post controller ', () => {
     await sut.handle(request);
 
     expect(listPosts_spy).toHaveBeenCalledWith(request.query);
+  });
+
+  it('list-post controller return ServerError if Listposts.listPost throws', async () => {
+    const {sut, listPosts} = makeSut();
+
+    // eslint-disable-next-line camelcase
+    jest.spyOn(listPosts, 'listPost').mockImplementationOnce(throwErr);
+    const request: QueryParameter = {
+      query: {
+        limit: 5,
+        page: 1,
+      },
+    };
+    const result = await sut.handle(request);
+
+    expect(result).toEqual(serverError(new ServerError('Internal Server Error')));
   });
 });
