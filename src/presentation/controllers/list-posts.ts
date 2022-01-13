@@ -2,7 +2,7 @@
 // eslint-disable-next-line max-len
 import {ListPostUsecase} from '@domain/usecase/list-posts';
 import {EmptyParamError, MissingParamError, ServerError} from '../errors/';
-import {badRequest, serverError} from '../helpers/http-helpers';
+import {badRequest, ok, serverError} from '../helpers/http-helpers';
 import {Controller} from '../protocols/controller';
 import {HttpResponse} from '../protocols/http';
 
@@ -25,11 +25,8 @@ export class ListPost implements Controller {
         return badRequest(new EmptyParamError('request.query'));
       }
 
-      this.listPost.listPost(request.query);
-      return {
-        statusCode: 200,
-        body: 'asdf',
-      };
+      const posts = await this.listPost.listPost(request.query);
+      return ok(posts);
     } catch (error) {
       return serverError(new ServerError('Internal Server Error'));
     }
